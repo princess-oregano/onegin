@@ -10,23 +10,31 @@ int main()
         FILE *sorted_text = NULL;
         text_t text {};
 
-        if ((original_text = fopen("test.txt", "r")) != NULL && (sorted_text = fopen("sort.txt", "w")) != NULL) {
-                init_buffer(original_text, &text.buffer, &text.buf_size);
+        if ((original_text = fopen("test.txt", "r")) == NULL) {
+                fprintf(stderr, "Error: Couldn't open test.txt.\n");
 
-                init_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
-
-                quicksort_strings(text.lines, text.num_of_lines);
-
-                print_strings(text, sorted_text);
-
-                free(text.lines);
-                free(text.buffer);
-
-                fclose(original_text);
-                fclose(sorted_text);
-        } else {
-                fprintf(stderr, "Error: Couldn't open files.\n");
+                return 1;
         }
+
+        if ((sorted_text = fopen("sort.txt", "w")) == NULL) {
+                fprintf(stderr, "Error: Couldn't open sort.txt.\n");
+
+                return 1;
+        }
+
+        init_buffer(original_text, &text.buffer, &text.buf_size);
+
+        init_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
+
+        quicksort_strings(text.lines, text.num_of_lines);
+
+        print_strings(text, sorted_text);
+
+        free(text.lines);
+        free(text.buffer);
+
+        fclose(original_text);
+        fclose(sorted_text);
 
         return 0;
 }

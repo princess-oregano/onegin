@@ -30,8 +30,7 @@ int main()
 
         print_strings(text, sorted_text);
 
-        free(text.lines);
-        free(text.buffer);
+        free_space(&text);
 
         fclose(original_text);
         fclose(sorted_text);

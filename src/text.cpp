@@ -88,3 +88,9 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
         *num_of_lines = line_array_count;
 }
 
+void free_space(text_t *text)
+{
+        free(text->lines);
+        free(text->buffer);
+}
+

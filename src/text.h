@@ -19,6 +19,8 @@ struct text_t {
 void init_buffer(FILE *infile, char **dest_buffer, size_t *dest_buffer_size);
 // Creates and initializes an array of line_t values.
 void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_size);
+// Frees allocated with malloc()/calloc()/realloc()/etc. space.
+void free_space(text_t *text);
 
 #endif // TEXT_H
 

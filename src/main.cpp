@@ -15,7 +15,7 @@ int main()
 
                 init_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
 
-                string_quicksort(&text);
+                string_sort(&text);
 
                 print_strings(text, sorted_text);
 

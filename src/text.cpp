@@ -7,6 +7,7 @@ void init_buffer(FILE *infile, char **dest_buffer, size_t *dest_buffer_size)
 {
         assert(infile);
         assert(dest_buffer);
+        assert(dest_buffer_size);
 
         int long num_of_ch = 0;
         char *buffer = NULL;
@@ -29,6 +30,11 @@ void init_buffer(FILE *infile, char **dest_buffer, size_t *dest_buffer_size)
 
 void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_size)
 {
+        assert(buffer);
+        assert(lines);
+        assert(num_of_lines);
+        assert(buf_size);
+
         int i = 0;
         int ch = 0;
         int line_count = 0;

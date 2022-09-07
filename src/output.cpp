@@ -4,6 +4,8 @@
 
 void print_strings(text_t text, FILE *stream)
 {
+        assert(stream);
+
         for (int i = 0; i < text.num_of_lines; i++) {
                 assert(text.lines[i].first_ch);
                 fprintf(stderr, "Line passed: %p\n", &text.lines[i].first_ch);

@@ -4,8 +4,10 @@
 #include <stdio.h>
 #include "text.h"
 
+// Bubble sort for strigs.
 void bubble_sort_strings(text_t *text);
-void quicksort(line_t *lines, int num_of_lines);
+// Quicksort for strings.
+void quicksort_strings(line_t *lines, int num_of_lines);
 
 #endif // SORT_H
 

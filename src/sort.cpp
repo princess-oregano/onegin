@@ -22,7 +22,7 @@ static int compare_lines(line_t line1, line_t line2)
         return *line1.first_ch - *line2.first_ch;
 }
 
-void string_sort(text_t *text)
+void bubble_sort_strings(text_t *text)
 {
        for (int i = 0; i < text->num_of_lines; i++)
                for (int j = i + 1; j < text -> num_of_lines; j++) {
@@ -31,5 +31,23 @@ void string_sort(text_t *text)
                                 swap_lines(&text->lines[i], &text->lines[j]);
                        }
                }
+}
+
+void quicksort(line_t *lines, int num_of_lines) 
+{
+	int i = 0;
+        int piv = 0;
+	
+        if (num_of_lines <= 1) 
+		return;
+	
+	for (i = 0; i < num_of_lines; i++) {
+		if (compare_lines(lines[i], lines[num_of_lines -1]) < 0)
+			swap_lines(lines + i, lines + piv++);		
+	}
+	swap_lines(lines + piv, lines + num_of_lines - 1);
+
+	quicksort(lines, piv++);	
+	quicksort(lines + piv, num_of_lines - piv);
 }
 

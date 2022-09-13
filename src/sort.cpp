@@ -37,7 +37,7 @@ void bubble_sort_strings(text_t *text)
                 }
 }
 
-void quicksort_strings(line_t *lines, int num_of_lines)
+void quick_sort_strings(line_t *lines, int num_of_lines)
 {
         assert(lines);
 
@@ -53,7 +53,7 @@ void quicksort_strings(line_t *lines, int num_of_lines)
 	}
 	swap_lines(lines + piv, lines + num_of_lines - 1);
 
-	quicksort_strings(lines, piv++);
-	quicksort_strings(lines + piv, num_of_lines - piv);
+	quick_sort_strings(lines, piv++);
+	quick_sort_strings(lines + piv, num_of_lines - piv);
 }
 

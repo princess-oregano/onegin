@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
         init_buffer(original_text, &text.buffer, &text.buf_size);
         init_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
 
-        quicksort_strings(text.lines, text.num_of_lines);
+        quick_sort_strings(text.lines, text.num_of_lines);
 
         print_strings(text, sorted_text);
 

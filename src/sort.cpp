@@ -26,7 +26,7 @@ static int compare_lines_ignore_punc(line_t line1, line_t line2)
                                 break;
                         line2.first_ch++;
                 }
-                
+
                 if (*line1.first_ch != *line2.first_ch)
                         break;
 

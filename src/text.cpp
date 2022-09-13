@@ -40,6 +40,7 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
         int line_count = 0;
         char *buf = buffer;
         int line_array_count = 0;
+        line_t *lines_array = NULL;
 
         while (true) {
                 if (buf[i] == '\n' || buf[i] == '\0') {
@@ -55,7 +56,10 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
 
         fprintf(stderr, "line_count = %d\n", line_count);
 
-        line_t *lines_array = (line_t *) calloc(line_count, sizeof(line_t));
+        if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == NULL) {
+                fprintf(stderr, "Couldn't allocate memory for lines_array.\n");
+                return;
+        }
 
         for (line_array_count = 0, i = 0; line_array_count < line_count && i < buf_size; ) {
                 //fprintf(stderr, "i = %d, buf_size = %d\n", i, buf_size);
@@ -90,6 +94,8 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
 
 void free_space(text_t *text)
 {
+        assert(text);
+
         free(text->lines);
         free(text->buffer);
 }

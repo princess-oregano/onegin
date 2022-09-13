@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
         quick_sort_strings(text.lines, text.num_of_lines);
 
-        print_strings(text, sorted_text);
+        print_strings(text, sorted_text, argv[1]);
 
         free_space(&text);
 

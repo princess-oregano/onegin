@@ -3,7 +3,8 @@ OBJDIR := obj
 
 SRC := main.cpp text.cpp sort.cpp output.cpp
 OBJ := $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
-
+TEST_SRC := Romeo_and_Juliet.txt
+TEST_DEST := sort.txt
 TARGET := onegin
 
 CXX := g++
@@ -55,7 +56,7 @@ all: out run
 
 run:
 	printf "%s\n" "Finished."
-	./$(TARGET)
+	./$(TARGET) $(TEST_SRC) $(TEST_DEST)
 
 out: $(OBJDIR) $(OBJ)
 	printf "%s\n" "Linking..."

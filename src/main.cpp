@@ -4,26 +4,25 @@
 #include "text.h"
 #include "output.h"
 
-int main()
+int main(int argc, char *argv[])
 {
         FILE *original_text = NULL;
         FILE *sorted_text = NULL;
         text_t text {};
 
-        if ((original_text = fopen("test.txt", "r")) == NULL) {
-                fprintf(stderr, "Error: Couldn't open test.txt.\n");
+        if ((original_text = fopen(argv[1], "r")) == NULL) {
+                fprintf(stderr, "Error: Couldn't open %s.\n", argv[1]);
 
                 return 1;
         }
 
-        if ((sorted_text = fopen("sort.txt", "w")) == NULL) {
-                fprintf(stderr, "Error: Couldn't open sort.txt.\n");
+        if ((sorted_text = fopen(argv[2], "w")) == NULL) {
+                fprintf(stderr, "Error: Couldn't open %s.\n", argv[2]);
 
                 return 1;
         }
 
         init_buffer(original_text, &text.buffer, &text.buf_size);
-
         init_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
 
         quicksort_strings(text.lines, text.num_of_lines);

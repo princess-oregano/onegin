@@ -58,7 +58,7 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
         line_t *lines_array = (line_t *) calloc(line_count, sizeof(line_t));
 
         for (line_array_count = 0, i = 0; line_array_count < line_count && i < buf_size; ) {
-                fprintf(stderr, "i = %d, buf_size = %d", i, buf_size);
+                //fprintf(stderr, "i = %d, buf_size = %d\n", i, buf_size);
                 while (isspace(ch = buf[i]))
                         i++;
 
@@ -77,7 +77,7 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
 
                         lines_array[line_array_count].last_ch = (&buf[i]);
 
-                        fprintf(stderr, "Line %d initialized: %p.\n", line_array_count, &lines_array[line_array_count]);
+                        //fprintf(stderr, "Line %d initialized: %p.\n", line_array_count, &lines_array[line_array_count]);
 
                         line_array_count++;
                 }

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "sort.h"
 
 static void swap_lines(line_t *line1, line_t *line2)
@@ -12,8 +13,14 @@ static void swap_lines(line_t *line1, line_t *line2)
              *line2 = temp;
 }
 
-static int compare_lines_ignore_punc(line_t line1, line_t line2)
+static int compare_lines_ignore_punc(const void *f_line, const void *s_line)
 {
+        assert(f_line);
+        assert(s_line);
+
+        line_t line1 = *((line_t *) f_line);
+        line_t line2 = *((line_t *) s_line);
+
         while (true) {
                 while (!isalnum(*line1.first_ch)) {
                         if (*line1.first_ch == *line1.last_ch)
@@ -40,8 +47,14 @@ static int compare_lines_ignore_punc(line_t line1, line_t line2)
         return *line1.first_ch - *line2.first_ch;
 }
 
-static int compare_lines(line_t line1, line_t line2)
+static int compare_lines(const void *f_line, const void *s_line)
 {
+        assert(f_line);
+        assert(s_line);
+
+        line_t line1 = *((line_t *) f_line);
+        line_t line2 = *((line_t *) s_line);
+
         while (line1.first_ch != line1.last_ch && line2.first_ch != line2.last_ch) {
                 if (*line1.first_ch != *line2.first_ch)
                         break;
@@ -53,36 +66,47 @@ static int compare_lines(line_t line1, line_t line2)
         return *line1.first_ch - *line2.first_ch;
 }
 
-void bubble_sort_strings(text_t *text)
+void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
-        assert(text);
+        assert(ptr);
+        assert(comp);
 
-        for (int i = 0; i < text->num_of_lines; i++)
-                for (int j = i + 1; j < text -> num_of_lines; j++) {
-                        if (compare_lines_ignore_punc(text->lines[i], text->lines[j]) > 0) {
+        line_t *lines = (line_t *) ptr;
+
+        for (int i = 0; i < count; i++)
+                for (int j = i + 1; j < count; j++) {
+                        if (comp(&lines[i], &lines[j]) > 0) {
                                 fprintf(stderr, "swap\n");
-                                swap_lines(&text->lines[i], &text->lines[j]);
+                                swap_lines(&lines[i], &lines[j]);
                         }
                 }
 }
 
-void quick_sort_strings(line_t *lines, int num_of_lines)
+void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
-        assert(lines);
+        assert(ptr);
+        assert(comp);
 
-	int i = 0;
+        line_t *lines = (line_t *) ptr;
+        int i = 0;
         int piv = 0;
 
-        if (num_of_lines <= 1)
+        if (count <= 1)
 		return;
 
-	for (i = 0; i < num_of_lines; i++) {
-		if (compare_lines_ignore_punc(lines[i], lines[num_of_lines - 1]) < 0)
+	for (i = 0; i < count; i++) {
+		if (comp(&lines[i], &lines[count - 1]) < 0)
 			swap_lines(lines + i, lines + piv++);
 	}
-	swap_lines(lines + piv, lines + num_of_lines - 1);
+	swap_lines(lines + piv, lines + count - 1);
 
-	quick_sort_strings(lines, piv++);
-	quick_sort_strings(lines + piv, num_of_lines - piv);
+	quick_sort_strings(lines, piv++, sizeof(line_t), compare_lines_ignore_punc);
+	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), compare_lines_ignore_punc);
+}
+
+void sort_strings(text_t *text)
+{
+        //qsort(text->lines, text->num_of_lines, sizeof(line_t), compare_lines_ignore_punc);
+        quick_sort_strings(text->lines, text->num_of_lines, sizeof(line_t), compare_lines_ignore_punc);
 }
 

@@ -12,12 +12,7 @@ void print_strings(text_t text, FILE *stream, char *filename)
         struct stat stats {};
         stat(filename, &stats);
 
-        /*
-         *if (setvbuf(stream, NULL, _IOFBF, stats.st_blksize) != 0) {
-         *        fprintf(stderr, "Couldn't create buffer.\n");
-         *        return;
-         *}
-         */
+        setvbuf(stream, NULL, _IOFBF, stats.st_blksize);
 
         char *sorted_text_buffer = (char *) calloc(stats.st_size, sizeof(char));
 

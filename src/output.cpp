@@ -19,7 +19,7 @@ void print_strings(text_t text, FILE *stream, char *filename)
         for (int i = 0; i < text.num_of_lines; i++) {
                 assert(text.lines[i].first_ch);
                 //fprintf(stderr, "Line passed: %p\n", &text.lines[i].first_ch);
-               
+
                 while (text.lines[i].first_ch != text.lines[i].last_ch) {
                         sorted_text_buffer[count] = *text.lines[i].first_ch;
                         text.lines[i].first_ch++;

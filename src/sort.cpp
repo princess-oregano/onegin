@@ -73,13 +73,13 @@ void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const
 
         line_t *lines = (line_t *) ptr;
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++) {
                 for (int j = i + 1; j < count; j++) {
                         if (comp(&lines[i], &lines[j]) > 0) {
-                                fprintf(stderr, "swap\n");
                                 swap_lines(&lines[i], &lines[j]);
                         }
                 }
+        }
 }
 
 void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
@@ -104,9 +104,29 @@ void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const 
 	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), compare_lines_ignore_punc);
 }
 
-void sort_strings(text_t *text)
+void sort_strings(text_t *text, sort_params_t sort_params)
 {
-        //qsort(text->lines, text->num_of_lines, sizeof(line_t), compare_lines_ignore_punc);
-        quick_sort_strings(text->lines, text->num_of_lines, sizeof(line_t), compare_lines_ignore_punc);
+        int (*comp)(const void *, const void *) = compare_lines_ignore_punc;
+        void (*sorting)(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *)) = bubble_sort_strings;
+
+        if (!sort_params.ignore_punc)
+                comp = compare_lines;
+
+        switch (sort_params.sort_type) {
+                case BUBBLE_SORT:
+                        sorting = bubble_sort_strings;
+                        break;
+                case QUICK_SORT:
+                        sorting = quick_sort_strings;
+                        break;
+                case Q_SORT:
+                        sorting = qsort;
+                        break;
+                default:
+                        fprintf(stderr, "Invalid sorting.\n");
+                        break;
+        }
+
+        sorting(text->lines, text->num_of_lines, sizeof(line_t), comp);
 }
 

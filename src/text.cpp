@@ -27,7 +27,7 @@ void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t
          *}
          */
 
-        if ((buffer = (char *) mmap(NULL, num_of_ch, PROT_READ, MAP_SHARED, fileno(infile), 0)) == MAP_FAILED)
+        if ((buffer = (char *) mmap(NULL, num_of_ch, PROT_READ, MAP_PRIVATE, fileno(infile), 0)) == MAP_FAILED)
                 fprintf(stderr, "Error: Couldn't allocate memory.\n");
         
         *dest_buffer_size = num_of_ch;

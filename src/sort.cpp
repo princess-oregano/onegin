@@ -100,8 +100,8 @@ void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const 
 	}
 	swap_lines(lines + piv, lines + count - 1);
 
-	quick_sort_strings(lines, piv++, sizeof(line_t), compare_lines_ignore_punc);
-	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), compare_lines_ignore_punc);
+	quick_sort_strings(lines, piv++, sizeof(line_t), comp);
+	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), comp);
 }
 
 void sort_strings(text_t *text, sort_params_t sort_params)

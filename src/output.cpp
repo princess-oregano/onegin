@@ -22,6 +22,7 @@ void print_strings(text_t text, FILE *stream, char *filename)
 
                 while (text.lines[i].first_ch != text.lines[i].last_ch) {
                         sorted_text_buffer[count] = *text.lines[i].first_ch;
+
                         text.lines[i].first_ch++;
                         count++;
                 }

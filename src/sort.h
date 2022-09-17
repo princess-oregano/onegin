@@ -12,7 +12,7 @@ enum sort_t {
 
 struct sort_params_t {
         bool ignore_punc = true;
-        sort_t sort_type = BUBBLE_SORT;
+        sort_t sort_type = QUICK_SORT;
 };
 
 // Bubble sort for strigs.

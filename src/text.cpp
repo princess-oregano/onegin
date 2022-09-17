@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 #include "text.h"
 
 void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t *dest_buffer_size)
@@ -17,14 +18,19 @@ void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t
         size_t ch_scanned = 0;
         size_t num_of_ch = (size_t) stats.st_size;
 
-        if ((buffer = (char *) calloc(num_of_ch + 1, sizeof(char))) != nullptr) {
-                ch_scanned = fread(buffer, sizeof(char), num_of_ch, infile);
-                buffer[num_of_ch] = '\0';
-        } else {
-                fprintf(stderr, "Error: Couldn't allocate memory.\n");
-        }
+        /*
+         *if ((buffer = (char *) calloc(num_of_ch + 1, sizeof(char))) != nullptr) {
+         *        ch_scanned = fread(buffer, sizeof(char), num_of_ch, infile);
+         *        buffer[num_of_ch] = '\0';
+         *} else {
+         *        fprintf(stderr, "Error: Couldn't allocate memory.\n");
+         *}
+         */
 
-        *dest_buffer_size = ch_scanned;
+        if ((buffer = (char *) mmap(NULL, num_of_ch, PROT_READ, MAP_SHARED, fileno(infile), 0)) == MAP_FAILED)
+                fprintf(stderr, "Error: Couldn't allocate memory.\n");
+        
+        *dest_buffer_size = num_of_ch;
         *dest_buffer = buffer;
 }
 
@@ -91,6 +97,7 @@ void destroy_text(text_t *text)
         assert(text);
 
         free(text->lines);
-        free(text->buffer);
+        munmap(text->buffer, text->buf_size);
+        //free(text->buffer);
 }
 

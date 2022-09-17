@@ -11,13 +11,13 @@ int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_tex
                 return ERR_PARAMS;
         }
 
-        if ((*original_text = fopen(argv[1], "r")) == NULL) {
+        if ((*original_text = fopen(argv[1], "r")) == nullptr) {
                 fprintf(stderr, "Error: Couldn't open %s.\n", argv[1]);
 
                 return ERR_FILE;
         }
 
-        if ((*sorted_text = fopen(argv[2], "w")) == NULL) {
+        if ((*sorted_text = fopen(argv[2], "w")) == nullptr) {
                 fprintf(stderr, "Error: Couldn't open %s.\n", argv[2]);
 
                 return ERR_FILE;

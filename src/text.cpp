@@ -1,85 +1,79 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+#include <sys/stat.h>
 #include "text.h"
 
-void init_buffer(FILE *infile, char **dest_buffer, size_t *dest_buffer_size)
+void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t *dest_buffer_size)
 {
         assert(infile);
         assert(dest_buffer);
         assert(dest_buffer_size);
 
-        int long num_of_ch = 0;
-        char *buffer = NULL;
+        struct stat stats {};
+        stat(filename, &stats);
+
+        char *buffer = nullptr;
         size_t ch_scanned = 0;
+        size_t num_of_ch = (size_t) stats.st_size;
 
-        fseek(infile, 0, SEEK_END);
-        num_of_ch = ftell(infile);
-        rewind(infile);
-
-        if ((buffer = (char *) calloc(num_of_ch + 1, sizeof(char))) != NULL) {
+        if ((buffer = (char *) calloc(num_of_ch + 1, sizeof(char))) != nullptr) {
                 ch_scanned = fread(buffer, sizeof(char), num_of_ch, infile);
                 buffer[num_of_ch] = '\0';
         } else {
-                fprintf(stderr, "Error.\n");
+                fprintf(stderr, "Error: Couldn't allocate memory.\n");
         }
 
         *dest_buffer_size = ch_scanned;
         *dest_buffer = buffer;
 }
 
-void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_size)
+void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t buf_size)
 {
         assert(buffer);
         assert(lines);
         assert(num_of_lines);
         assert(buf_size);
 
-        int i = 0;
-        int ch = 0;
-        int line_count = 0;
-        char *buf = buffer;
-        int line_array_count = 0;
-        line_t *lines_array = NULL;
+        size_t i = 0;
+        size_t line_count = 0;
+        size_t line_array_count = 0;
+        line_t *lines_array = nullptr;
 
         while (true) {
-                if (buf[i] == '\n' || buf[i] == '\0') {
+                if (buffer[i] == '\n' || buffer[i] == '\0') {
                         //fprintf(stderr,"Newline\n");
                         line_count++;
                 }
 
-                if (buf[i] == '\0')
+                if (buffer[i] == '\0')
                         break;
 
                 i++;
         }
 
-        fprintf(stderr, "line_count = %d\n", line_count);
+        //fprintf(stderr, "line_count = %d\n", line_count);
 
-        if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == NULL) {
+        if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == nullptr) {
                 fprintf(stderr, "Couldn't allocate memory for lines_array.\n");
                 return;
         }
 
+        int ch = 0;
         for (line_array_count = 0, i = 0; line_array_count < line_count && i < buf_size; ) {
-                //fprintf(stderr, "i = %d, buf_size = %d\n", i, buf_size);
-                while (isspace(ch = buf[i]))
+                //fprintf(stderr, "i = %d, buffer_size = %d\n", i, buffer_size);
+                while (isspace(ch = buffer[i]))
                         i++;
 
-                if (ch == EOF) {
-                        //fprintf(stderr, "EOF encountered\n");
-                        break;
-                }
-
                 if (ch != '\n' && ch != '\0') {
-                        lines_array[line_array_count].first_ch = &buf[i];
+                        lines_array[line_array_count].first_ch = &buffer[i];
 
                         while (ch != '\n' && ch != '\0') {
                                 i++;
-                                ch = buf[i];
+                                ch = buffer[i];
                         }
 
-                        lines_array[line_array_count].last_ch = (&buf[i]);
+                        lines_array[line_array_count].last_ch = (&buffer[i]);
 
                         //fprintf(stderr, "Line %d initialized: %p.\n", line_array_count, &lines_array[line_array_count]);
 
@@ -92,7 +86,7 @@ void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_siz
         *num_of_lines = line_array_count;
 }
 
-void free_space(text_t *text)
+void destroy_text(text_t *text)
 {
         assert(text);
 

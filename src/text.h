@@ -4,23 +4,23 @@
 #include <stdio.h>
 
 struct line_t {
-        char *first_ch = NULL;
-        char  *last_ch = NULL;
+        char *first_ch = nullptr;
+        char  *last_ch = nullptr;
 };
 
 struct text_t {
-        char *buffer     = NULL;
+        char *buffer     = nullptr;
         size_t buf_size  = 0;
         line_t *lines    = {};
-        int num_of_lines = 0;
+        size_t num_of_lines = 0;
 };
 
 // Creates and initializes buffer for storing text.
-void init_buffer(FILE *infile, char **dest_buffer, size_t *dest_buffer_size);
+void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t *dest_buffer_size);
 // Creates and initializes an array of line_t values.
-void init_lines_arr(char *buffer, line_t **lines, int *num_of_lines, int buf_size);
+void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t buf_size);
 // Frees allocated with malloc()/calloc()/realloc()/etc. space.
-void free_space(text_t *text);
+void destroy_text(text_t *text);
 
 #endif // TEXT_H
 

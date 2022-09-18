@@ -26,6 +26,12 @@ int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_tex
         for (int i = 3; i < argc; i++) {
                 if (strcmp(argv[i], "-p") == 0)
                         sort_params->ignore_punc = false;
+                if (strcmp(argv[i], "-b") == 0)
+                        sort_params->sort_type = BUBBLE_SORT;
+                if (strcmp(argv[i], "-q") == 0)
+                        sort_params->sort_type = QUICK_SORT;
+                if (strcmp(argv[i], "-qs") == 0)
+                        sort_params->sort_type = Q_SORT;
         }
 
         return -1;

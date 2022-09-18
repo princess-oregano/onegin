@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <sys/stat.h>
+#include "UI.h"
 #include "output.h"
 
 void write_strings(text_t text, FILE *stream, char *filename)

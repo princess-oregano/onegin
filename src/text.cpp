@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include "sort.h"
+#include "UI.h"
 #include "text.h"
 
 void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t *dest_buffer_size)
@@ -29,12 +31,12 @@ void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t
 
         if ((buffer = (char *) mmap(NULL, num_of_ch, PROT_READ, MAP_PRIVATE, fileno(infile), 0)) == MAP_FAILED)
                 fprintf(stderr, "Error: Couldn't allocate memory.\n");
-        
+
         *dest_buffer_size = num_of_ch;
         *dest_buffer = buffer;
 }
 
-void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t buf_size)
+void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t buf_size, bool verbose)
 {
         assert(buffer);
         assert(lines);
@@ -58,7 +60,7 @@ void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t
                 i++;
         }
 
-        //fprintf(stderr, "line_count = %d\n", line_count);
+        print_verbose_msg(verbose, "line_count = %d\n", line_count);
 
         if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == nullptr) {
                 fprintf(stderr, "Couldn't allocate memory for lines_array.\n");
@@ -87,7 +89,6 @@ void create_lines_arr(char *buffer, line_t **lines, size_t *num_of_lines, size_t
                 }
         }
 
-        fprintf(stderr, "Cycle broken\n");
         *lines = lines_array;
         *num_of_lines = line_array_count;
 }

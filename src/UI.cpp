@@ -1,9 +1,28 @@
 #include <string.h>
 #include <assert.h>
-#include "args.h"
+#include <stdarg.h>
+#include "UI.h"
 #include "sort.h"
 
-int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_text, sort_params_t *sort_params)
+static void set_verbose(bool *verbose)
+{
+        *verbose = true;
+}
+
+int print_verbose_msg(bool verbose, const char *format, ...)
+{
+        if (!verbose)
+                return 0;
+
+        va_list args;
+        va_start(args, format);
+        int ret = vfprintf(stderr, format, args);
+        va_end(args);
+
+        return ret;
+}
+
+int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_text, sort_params_t *sort_params, bool *verbose)
 {
         if (argc < 3) {
                 fprintf(stderr, "Error: not enough parameters.\n");
@@ -32,8 +51,10 @@ int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_tex
                         sort_params->sort_type = QUICK_SORT;
                 if (strcmp(argv[i], "-qs") == 0)
                         sort_params->sort_type = Q_SORT;
+                if (strcmp(argv[i], "-v") == 0)
+                        set_verbose(verbose);
         }
 
-        return -1;
+        return ERR_NO_ERR;
 }
 

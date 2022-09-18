@@ -3,7 +3,7 @@
 #include "sort.h"
 #include "text.h"
 #include "output.h"
-#include "args.h"
+#include "UI.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,15 +11,16 @@ int main(int argc, char *argv[])
         FILE *sorted_text = nullptr;
         text_t text {};
         sort_params_t sort_params {};
+        bool verbose = false;
 
-        process_args(argc, argv, &original_text, &sorted_text, &sort_params);
+        process_args(argc, argv, &original_text, &sorted_text, &sort_params, &verbose);
 
         create_text_buffer(original_text, argv[1], &text.buffer, &text.buf_size);
         fclose(original_text);
 
-        create_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size);
+        create_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size, verbose);
 
-        sort_strings(&text, sort_params);
+        sort_strings(&text, sort_params, verbose);
         write_strings(text, sorted_text, argv[1]);
 
         destroy_text(&text);

@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include "UI.h"
 #include "sort.h"
 
 static void swap_lines(line_t *line1, line_t *line2)
@@ -104,7 +105,7 @@ void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const 
 	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), comp);
 }
 
-void sort_strings(text_t *text, sort_params_t sort_params)
+void sort_strings(text_t *text, sort_params_t sort_params, bool verbose)
 {
         int (*comp)(const void *, const void *) = compare_lines_ignore_punc;
         void (*sort_func)(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *)) = bubble_sort_strings;
@@ -127,6 +128,7 @@ void sort_strings(text_t *text, sort_params_t sort_params)
                         break;
         }
 
+        print_verbose_msg(verbose, "ignore_punc = %d, sort_type = %d\n", sort_params.ignore_punc, sort_params.sort_type);
         sort_func(text->lines, text->num_of_lines, sizeof(line_t), comp);
 }
 

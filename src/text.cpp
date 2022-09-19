@@ -7,14 +7,14 @@
 #include "UI.h"
 #include "text.h"
 
-void create_text_buffer(FILE *infile, char *filename, char **dest_buffer, size_t *dest_buffer_size)
+void create_text_buffer(FILE *infile, char **filename, char **dest_buffer, size_t *dest_buffer_size)
 {
         assert(infile);
         assert(dest_buffer);
         assert(dest_buffer_size);
 
         struct stat stats {};
-        stat(filename, &stats);
+        stat(*filename, &stats);
 
         char *buffer = nullptr;
         size_t ch_scanned = 0;

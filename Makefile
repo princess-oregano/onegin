@@ -56,7 +56,7 @@ all: out run
 
 run:
 	printf "%s\n" "Finished."
-	./$(TARGET) $(TEST_SRC) $(TEST_DEST)
+	./$(TARGET) -i $(TEST_SRC) -o $(TEST_DEST) -v
 
 out: $(OBJDIR) $(OBJ)
 	printf "%s\n" "Linking..."

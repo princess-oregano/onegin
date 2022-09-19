@@ -12,7 +12,7 @@ enum error_t {
 };
 
 // Processes command line arguments.
-int process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_text, sort_params_t *sort_params, bool *verbose);
+error_t process_args(int argc, char *argv[], FILE **original_text, FILE **sorted_text, sort_params_t *sort_params, text_t *text, bool *verbose);
 // Prints error message.
 void print_err_msg(error_t err);
 // Prints info about program processes in verbose mode.

@@ -5,14 +5,14 @@
 #include "UI.h"
 #include "output.h"
 
-void write_strings(text_t text, FILE *stream, char *filename)
+void write_strings(text_t text, FILE *stream, char **filename)
 {
         assert(stream);
         assert(filename);
 
         size_t count = 0;
         struct stat stats {};
-        stat(filename, &stats);
+        stat(*filename, &stats);
 
         setvbuf(stream, NULL, _IOFBF, (size_t) stats.st_blksize);
 

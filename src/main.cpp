@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
 
         process_args(argc, argv, &original_text, &sorted_text, &sort_params, &text, &verbose);
 
-        create_text_buffer(original_text, text.filename, &text.buffer, &text.buf_size);
+        create_text_buffer(original_text, &text);
         fclose(original_text);
 
-        create_lines_arr(text.buffer, &text.lines, &text.num_of_lines, text.buf_size, verbose);
+        create_lines_arr(&text, verbose);
 
         sort_strings(&text, sort_params, verbose);
         write_strings(text, sorted_text, text.filename);

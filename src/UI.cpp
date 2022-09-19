@@ -4,12 +4,7 @@
 #include "UI.h"
 #include "sort.h"
 
-static void set_verbose(bool *verbose)
-{
-        *verbose = true;
-}
-
-int print_verbose_msg(bool verbose, const char *format, ...)
+int verbose_msg(bool verbose, const char *format, ...)
 {
         if (!verbose)
                 return 0;
@@ -59,7 +54,7 @@ error_t process_args(int argc, char *argv[], FILE **original_text, FILE **sorted
                 }
 
                 if (strcmp(argv[i], "-v") == 0)
-                        set_verbose(verbose);
+                        *verbose = true;;
 
 
         }

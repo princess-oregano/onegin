@@ -16,7 +16,7 @@ error_t process_args(int argc, char *argv[], FILE **original_text, FILE **sorted
 // Prints error message.
 void print_err_msg(error_t err);
 // Prints info about program processes in verbose mode.
-int print_verbose_msg(bool verbose, const char *format, ...);
+int verbose_msg(bool verbose, const char *format, ...);
 
 #endif // ARGS_H
 

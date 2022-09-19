@@ -125,10 +125,11 @@ void sort_strings(text_t *text, sort_params_t sort_params, bool verbose)
                         break;
                 default:
                         fprintf(stderr, "Invalid sorting option.\n");
+                        assert(0);
                         break;
         }
 
-        print_verbose_msg(verbose, "ignore_punc = %d, sort_type = %d\n", sort_params.ignore_punc, sort_params.sort_type);
+        verbose_msg(verbose, "ignore_punc = %d, sort_type = %d\n", sort_params.ignore_punc, sort_params.sort_type);
         sort_func(text->lines, text->num_of_lines, sizeof(line_t), comp);
 }
 

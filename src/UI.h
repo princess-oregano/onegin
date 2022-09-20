@@ -1,7 +1,19 @@
 #ifndef ARGS_H
 #define ARGS_H
 
-#include "sort.h"
+#include <stdio.h>
+#include "text.h"
+
+enum sort_t {
+        BUBBLE_SORT = 0,
+        QUICK_SORT  = 1,
+        Q_SORT      = 2,
+};
+
+struct sort_params_t {
+        bool ignore_punc = true;
+        sort_t sort_type = QUICK_SORT;
+};
 
 enum error_t {
         ERR_NO_ERR   = 0,

@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
         sort_params_t sort_params {};
         bool verbose = false;
 
-        process_args(argc, argv, &original_text, &sorted_text, &sort_params, &text, &verbose);
+        int rev = 0;
+        if ((rev = process_args(argc, argv, &original_text, &sorted_text, &sort_params, &text, &verbose)))
+                return rev;
 
         create_text_buffer(original_text, &text);
         fclose(original_text);

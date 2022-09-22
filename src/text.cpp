@@ -7,7 +7,7 @@
 #include "sort.h"
 #include "text.h"
 
-void read_file(text_t *text, file_t *file, bool verbose)
+int read_file(text_t *text, file_t *file, bool verbose)
 {
         assert(text);
         assert(file);
@@ -18,14 +18,18 @@ void read_file(text_t *text, file_t *file, bool verbose)
         text->buf_size = (size_t) stats.st_size;
 
         char *buffer = nullptr;
-        if ((buffer = (char *) mmap(NULL, text->buf_size, PROT_READ, MAP_PRIVATE, fileno(file->src_file_ptr), 0)) == MAP_FAILED)
+        if ((buffer = (char *) mmap(NULL, text->buf_size, PROT_READ, MAP_PRIVATE, fileno(file->src_file_ptr), 0)) == MAP_FAILED) {
                 fprintf(stderr, "Error: Couldn't allocate memory.\n");
+                return ERR_ALLOC;
+        }
 
         verbose_msg(verbose, "Buffer pointer: %p\n", buffer);
         text->buffer = buffer;
+
+        return ERR_NO_ERR;
 }
 
-void create_lines_arr(text_t *text, bool verbose)
+int create_lines_arr(text_t *text, bool verbose)
 {
         assert(text);
 
@@ -48,7 +52,7 @@ void create_lines_arr(text_t *text, bool verbose)
 
         if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == nullptr) {
                 fprintf(stderr, "Couldn't allocate memory for lines_array.\n");
-                return;
+                return ERR_ALLOC;
         }
 
         int ch = 0;
@@ -73,6 +77,8 @@ void create_lines_arr(text_t *text, bool verbose)
 
         text->lines = lines_array;
         text->num_of_lines = line_array_count;
+
+        return ERR_NO_ERR;
 }
 
 void destroy_text(text_t *text)

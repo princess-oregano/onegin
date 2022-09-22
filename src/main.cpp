@@ -27,10 +27,12 @@ int main(int argc, char *argv[])
                 return ERR_OPEN_FILE;
         }
 
-        read_file(&text, &file, params.verbose);
+        if (read_file(&text, &file, params.verbose) == ERR_ALLOC)
+                return ERR_ALLOC;
         fclose(file.src_file_ptr);
 
-        create_lines_arr(&text, params.verbose);
+        if (create_lines_arr(&text, params.verbose) == ERR_ALLOC)
+                return ERR_ALLOC;
 
         sort_strings(&text, params);
         write_strings(text, &file);

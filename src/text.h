@@ -17,9 +17,9 @@ struct text_t {
 };
 
 // Creates and initializes buffer for storing text.
-void read_file(text_t *text, file_t *file, bool verbose);
+int read_file(text_t *text, file_t *file, bool verbose);
 // Creates and initializes an array of line_t values.
-void create_lines_arr(text_t *text, bool verbose);
+int create_lines_arr(text_t *text, bool verbose);
 // Frees allocated with malloc()/calloc()/realloc()/etc. space.
 void destroy_text(text_t *text);
 

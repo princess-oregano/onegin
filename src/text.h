@@ -2,6 +2,7 @@
 #define TEXT_H
 
 #include <stdio.h>
+#include "UI.h"
 
 struct line_t {
         char *first_ch = nullptr;
@@ -9,7 +10,6 @@ struct line_t {
 };
 
 struct text_t {
-        char **filename     = nullptr;
         char *buffer        = nullptr;
         size_t buf_size     = 0;
         line_t *lines       = {};
@@ -17,7 +17,7 @@ struct text_t {
 };
 
 // Creates and initializes buffer for storing text.
-void create_text_buffer(FILE *infile, text_t *text);
+void read_file(text_t *text, file_t *file, bool verbose);
 // Creates and initializes an array of line_t values.
 void create_lines_arr(text_t *text, bool verbose);
 // Frees allocated with malloc()/calloc()/realloc()/etc. space.

@@ -3,35 +3,25 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include "sort.h"
 #include "UI.h"
+#include "sort.h"
 #include "text.h"
 
-void create_text_buffer(FILE *infile, text_t *text)
+void read_file(text_t *text, file_t *file, bool verbose)
 {
-        assert(infile);
         assert(text);
+        assert(file);
 
         struct stat stats {};
-        stat(*text->filename, &stats);
+        stat(file->src_filename, &stats);
+
+        text->buf_size = (size_t) stats.st_size;
 
         char *buffer = nullptr;
-        size_t num_of_ch = (size_t) stats.st_size;
-
-        /*
-         * size_t ch_scanned = 0;
-         * if ((buffer = (char *) calloc(num_of_ch + 1, sizeof(char))) != nullptr) {
-         *         ch_scanned = fread(buffer, sizeof(char), num_of_ch, infile);
-         *         buffer[num_of_ch] = '\0';
-         * } else {
-         *         fprintf(stderr, "Error: Couldn't allocate memory.\n");
-         * }
-         */
-
-        if ((buffer = (char *) mmap(NULL, num_of_ch, PROT_READ, MAP_PRIVATE, fileno(infile), 0)) == MAP_FAILED)
+        if ((buffer = (char *) mmap(NULL, text->buf_size, PROT_READ, MAP_PRIVATE, fileno(file->src_file_ptr), 0)) == MAP_FAILED)
                 fprintf(stderr, "Error: Couldn't allocate memory.\n");
 
-        text->buf_size = num_of_ch;
+        verbose_msg(verbose, "Buffer pointer: %p\n", buffer);
         text->buffer = buffer;
 }
 
@@ -45,10 +35,8 @@ void create_lines_arr(text_t *text, bool verbose)
         line_t *lines_array = nullptr;
 
         while (true) {
-                if (text->buffer[i] == '\n' || text->buffer[i] == '\0') {
-                        //fprintf(stderr,"Newline\n");
+                if (text->buffer[i] == '\n' || text->buffer[i] == '\0')
                         line_count++;
-                }
 
                 if (text->buffer[i] == '\0')
                         break;
@@ -79,8 +67,6 @@ void create_lines_arr(text_t *text, bool verbose)
 
                         lines_array[line_array_count].last_ch = (&text->buffer[i]);
 
-                        //fprintf(stderr, "Line %d initialized: %p.\n", line_array_count, &lines_array[line_array_count]);
-
                         line_array_count++;
                 }
         }
@@ -97,6 +83,5 @@ void destroy_text(text_t *text)
                 free(text->lines);
         if (text->buffer != nullptr)
                 munmap(text->buffer, text->buf_size);
-        //free(text->buffer);
 }
 

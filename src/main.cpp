@@ -7,26 +7,36 @@
 
 int main(int argc, char *argv[])
 {
-        FILE *original_text = nullptr;
-        FILE *sorted_text = nullptr;
+        file_t file {};
         text_t text {};
-        sort_params_t sort_params {};
-        bool verbose = false;
+        params_t params {};
 
         int rev = 0;
-        if ((rev = process_args(argc, argv, &original_text, &sorted_text, &sort_params, &text, &verbose)))
+        if ((rev = process_args(argc, argv, &params, &file)))
                 return rev;
 
-        create_text_buffer(original_text, &text);
-        fclose(original_text);
+        if ((file.src_file_ptr = fopen(file.src_filename, "r")) == nullptr) {
+                fprintf(stderr, "Error: Couldn't open %s.\n", file.src_filename);
 
-        create_lines_arr(&text, verbose);
+                return ERR_OPEN_FILE;
+        }
 
-        sort_strings(&text, sort_params, verbose);
-        write_strings(text, sorted_text, text.filename);
+        if ((file.dst_file_ptr = fopen(file.dst_filename, "w")) == nullptr) {
+                fprintf(stderr, "Error: Couldn't open %s.\n", file.dst_filename);
+
+                return ERR_OPEN_FILE;
+        }
+
+        read_file(&text, &file, params.verbose);
+        fclose(file.src_file_ptr);
+
+        create_lines_arr(&text, params.verbose);
+
+        sort_strings(&text, params);
+        write_strings(text, &file);
 
         destroy_text(&text);
-        fclose(sorted_text);
+        fclose(file.dst_file_ptr);
 
         return 0;
 }

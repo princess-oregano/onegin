@@ -10,7 +10,7 @@ void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const
 // Quicksort for strings.
 void  quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *));
 // Sorts strings with given parameters.
-void sort_strings(text_t *text, sort_params_t sort_params, bool verbose);
+void sort_strings(text_t *text, params_t params);
 
 #endif // SORT_H
 

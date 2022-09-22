@@ -5,16 +5,13 @@
 #include "UI.h"
 #include "output.h"
 
-void write_strings(text_t text, FILE *stream, char **filename)
+void write_strings(text_t text, file_t *file)
 {
-        assert(stream);
-        assert(filename);
-
         size_t count = 0;
         struct stat stats {};
-        stat(*filename, &stats);
+        stat(file->src_filename, &stats);
 
-        setvbuf(stream, NULL, _IOFBF, (size_t) stats.st_blksize);
+        setvbuf(file->dst_file_ptr, NULL, _IOFBF, (size_t) stats.st_blksize);
 
         char *sorted_text_buffer = (char *) calloc((size_t) stats.st_size, sizeof(char));
 
@@ -33,7 +30,7 @@ void write_strings(text_t text, FILE *stream, char **filename)
                 count++;
         }
 
-        fwrite(sorted_text_buffer, sizeof(char), count, stream);
+        fwrite(sorted_text_buffer, sizeof(char), count, file->dst_file_ptr);
         free(sorted_text_buffer);
 }
 

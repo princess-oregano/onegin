@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sort.h"
 #include "text.h"
 #include "output.h"
@@ -10,6 +11,11 @@ int main(int argc, char *argv[])
         file_t file {};
         text_t text {};
         params_t params {};
+
+        if (argc == 2 && strcmp(argv[1], "--help") == 0) {
+                print_help();
+                return 0;
+        }
 
         int rev = 0;
         if ((rev = process_args(argc, argv, &params, &file)))

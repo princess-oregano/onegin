@@ -1,7 +1,7 @@
 SRCDIR := src
 OBJDIR := obj
 
-SRC := main.cpp text.cpp sort.cpp output.cpp UI.cpp
+SRC := main.cpp text.cpp sort.cpp UI.cpp
 OBJ := $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
 TEST_SRC := Romeo_and_Juliet.txt
 TEST_DEST := sort.txt

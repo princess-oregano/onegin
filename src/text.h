@@ -22,6 +22,8 @@ int read_file(text_t *text, file_t *file, bool verbose);
 int create_lines_arr(text_t *text, bool verbose);
 // Frees allocated with malloc()/calloc()/realloc()/etc. space.
 void destroy_text(text_t *text);
+// Prints given text in stream.
+error_t write_strings(text_t text, file_t *file);
 
 #endif // TEXT_H
 

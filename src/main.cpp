@@ -12,14 +12,12 @@ int main(int argc, char *argv[])
         text_t text {};
         params_t params {};
 
-        if (argc == 2 && strcmp(argv[1], "--help") == 0) {
-                print_help();
-                return 0;
-        }
+        int ret = 0;
+        if ((ret = process_args(argc, argv, &params, &file)))
+                return ret;
 
-        int rev = 0;
-        if ((rev = process_args(argc, argv, &params, &file)))
-                return rev;
+        if (params.help)
+                return 0;
 
         if ((file.src_file_ptr = fopen(file.src_filename, "r")) == nullptr) {
                 fprintf(stderr, "Error: Couldn't open %s.\n", file.src_filename);
@@ -27,6 +25,7 @@ int main(int argc, char *argv[])
                 return ERR_OPEN_FILE;
         }
 
+        // wrap
         if ((file.dst_file_ptr = fopen(file.dst_filename, "w")) == nullptr) {
                 fprintf(stderr, "Error: Couldn't open %s.\n", file.dst_filename);
 
@@ -35,13 +34,16 @@ int main(int argc, char *argv[])
 
         if (read_file(&text, &file, params.verbose) == ERR_ALLOC)
                 return ERR_ALLOC;
+
         fclose(file.src_file_ptr);
 
         if (create_lines_arr(&text, params.verbose) == ERR_ALLOC)
                 return ERR_ALLOC;
 
         sort_strings(&text, params);
-        write_strings(text, &file);
+
+        if (write_strings(text, &file) == ERR_ALLOC)
+                return ERR_ALLOC;
 
         destroy_text(&text);
         fclose(file.dst_file_ptr);

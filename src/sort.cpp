@@ -122,7 +122,9 @@ static int compare_lines_rev(const void *f_line, const void *s_line)
         }
 }
 
-void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
+// Bubble sort for strigs.
+// sort for all objects
+static void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
         assert(comp);
@@ -138,7 +140,8 @@ void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const
         }
 }
 
-void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
+// Quicksort for strings.
+static void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
         assert(comp);
@@ -162,8 +165,12 @@ void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const 
 
 void sort_strings(text_t *text, params_t params)
 {
-        int (*comp)(const void *, const void *) = compare_lines_ignore_punc;
-        void (*sort_func)(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *)) = bubble_sort_strings;
+        int (*comp)(const void *, const void *) = nullptr;
+        // len of declaration?
+        void (*sort_func)(void *ptr, size_t count, size_t size,
+                          int (*comp)(const void *, const void *)) = nullptr;
+
+        verbose_msg(params.verbose, "ignore_punc = %d, sort_type = %d\n", params.ignore_punc, params.sort_type);
 
         if (!params.ignore_punc) {
                 if (params.reverse_comp)
@@ -173,6 +180,8 @@ void sort_strings(text_t *text, params_t params)
         } else {
                 if (params.reverse_comp)
                         comp = compare_lines_ignore_punc_rev;
+                else
+                        comp = compare_lines_ignore_punc;
         }
 
         switch (params.sort_type) {
@@ -188,12 +197,10 @@ void sort_strings(text_t *text, params_t params)
                         sort_func = qsort;
                         break;
                 default:
-                        fprintf(stderr, "Invalid sorting option.\n");
-                        assert(0);
+                        assert(0 && "Invalid sorting option");
                         break;
         }
 
-        verbose_msg(params.verbose, "ignore_punc = %d, sort_type = %d\n", params.ignore_punc, params.sort_type);
         sort_func(text->lines, text->num_of_lines, sizeof(line_t), comp);
 }
 

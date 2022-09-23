@@ -21,14 +21,17 @@ enum error_t {
 };
 
 struct file_t {
+        // stat?
         char  src_filename[FILENAME_SIZE] = {};
         FILE *src_file_ptr = nullptr;
+        // large static array for name
         char  dst_filename[FILENAME_SIZE] = {};
         FILE *dst_file_ptr = nullptr;
 };
 
 struct params_t {
         sort_t sort_type  = QUICK_SORT;
+        bool help         = false;
         bool verbose      = false;
         bool ignore_punc  = true;
         bool reverse_comp = false;

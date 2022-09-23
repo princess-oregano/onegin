@@ -4,7 +4,7 @@
 #include "text.h"
 
 // Prints given text in stream.
-void write_strings(text_t text, file_t *file);
+error_t write_strings(text_t text, file_t *file);
 
 #endif // OUTPUT_H
 

@@ -35,7 +35,6 @@ int create_lines_arr(text_t *text, bool verbose)
 
         size_t i = 0;
         size_t line_count = 0;
-        size_t line_array_count = 0;
         line_t *lines_array = nullptr;
 
         while (true) {
@@ -56,27 +55,27 @@ int create_lines_arr(text_t *text, bool verbose)
         }
 
         int ch = 0;
-        for (line_array_count = 0, i = 0; line_array_count < line_count && i < text->buf_size; ) {
-                //fprintf(stderr, "i = %d, buffer_size = %d\n", i, buffer_size);
+        size_t index = 0;
+        for (index = 0, i = 0; index < line_count && i < text->buf_size; ) {
                 while (isspace(ch = text->buffer[i]))
                         i++;
 
                 if (ch != '\n' && ch != '\0') {
-                        lines_array[line_array_count].first_ch = &text->buffer[i];
+                        lines_array[index].first_ch = &text->buffer[i];
 
                         while (ch != '\n' && ch != '\0') {
                                 i++;
                                 ch = text->buffer[i];
                         }
 
-                        lines_array[line_array_count].last_ch = (&text->buffer[i]);
+                        lines_array[index].last_ch = (&text->buffer[i]);
 
-                        line_array_count++;
+                        index++;
                 }
         }
 
         text->lines = lines_array;
-        text->num_of_lines = line_array_count;
+        text->num_of_lines = index;
 
         return ERR_NO_ERR;
 }

@@ -4,14 +4,19 @@
 #include "UI.h"
 #include "sort.h"
 
-static void swap_lines(line_t *line1, line_t *line2)
+static void swap_lines(void *f_line, void *s_line, size_t size)
 {
-        assert(line1);
-        assert(line2);
+        assert(f_line);
+        assert(s_line);
 
-        line_t temp = *line1;
-             *line1 = *line2;
-             *line2 = temp;
+        char *line1 = (char *) f_line;
+        char *line2 = (char *) s_line;
+
+        for (size_t i = 0; i < size; i++) {
+                char temp = *(line1 + i);
+             *(line1 + i) = *(line2 + i);
+             *(line2 + i) = temp;
+        }
 }
 
 static int compare_lines_ignore_punc(const void *f_line, const void *s_line)
@@ -38,8 +43,10 @@ static int compare_lines_ignore_punc(const void *f_line, const void *s_line)
                 if (*line1.first_ch != *line2.first_ch)
                         break;
 
-                if (line1.first_ch == line1.last_ch || line2.first_ch == line2.last_ch)
-                        return (int) (line1.last_ch - line1.first_ch) - (int) (line2.last_ch - line2.first_ch);
+                if (line1.first_ch == line1.last_ch || line2.first_ch == line2.last_ch) {
+                        return (int) (line1.last_ch - line1.first_ch)
+                             - (int) (line2.last_ch - line2.first_ch);
+                }
 
                 line1.first_ch++;
                 line2.first_ch++;
@@ -72,8 +79,10 @@ static int compare_lines_ignore_punc_rev(const void *f_line, const void *s_line)
                 if (*line1.last_ch != *line2.last_ch)
                         break;
 
-                if (line1.last_ch == line1.first_ch || line2.last_ch == line2.first_ch)
-                        return (int) (line1.last_ch - line1.first_ch) - (int) (line2.last_ch - line2.first_ch);
+                if (line1.last_ch == line1.first_ch || line2.last_ch == line2.first_ch) {
+                        return (int) (line1.last_ch - line1.first_ch)
+                             - (int) (line2.last_ch - line2.first_ch);
+                }
 
                 line1.last_ch--;
                 line2.last_ch--;
@@ -94,8 +103,10 @@ static int compare_lines(const void *f_line, const void *s_line)
                 if (*line1.first_ch != *line2.first_ch)
                         return *line1.first_ch - *line2.first_ch;
 
-                if (line1.first_ch == line1.last_ch || line2.first_ch == line2.last_ch)
-                        return (int) (line1.last_ch - line1.first_ch) - (int) (line2.last_ch - line2.first_ch);
+                if (line1.first_ch == line1.last_ch || line2.first_ch == line2.last_ch) {
+                        return (int) (line1.last_ch - line1.first_ch)
+                             - (int) (line2.last_ch - line2.first_ch);
+                }
 
                 line1.first_ch++;
                 line2.first_ch++;
@@ -114,8 +125,10 @@ static int compare_lines_rev(const void *f_line, const void *s_line)
                 if (*line1.last_ch != *line2.last_ch)
                         return *line1.last_ch - *line2.last_ch;
 
-                if (line1.last_ch == line1.first_ch || line2.last_ch == line2.first_ch)
-                        return (int) (line1.last_ch - line1.first_ch) - (int) (line2.last_ch - line2.first_ch);
+                if (line1.last_ch == line1.first_ch || line2.last_ch == line2.first_ch) {
+                        return (int) (line1.last_ch - line1.first_ch)
+                             - (int) (line2.last_ch - line2.first_ch);
+                }
 
                 line1.last_ch--;
                 line2.last_ch--;
@@ -123,18 +136,17 @@ static int compare_lines_rev(const void *f_line, const void *s_line)
 }
 
 // Bubble sort for strigs.
-// sort for all objects
 static void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
         assert(comp);
 
-        line_t *lines = (line_t *) ptr;
+        char *lines = (char *) ptr;
 
         for (size_t i = 0; i < count; i++) {
                 for (size_t j = i + 1; j < count; j++) {
-                        if (comp(&lines[i], &lines[j]) > 0) {
-                                swap_lines(&lines[i], &lines[j]);
+                        if (comp(lines + i*size, lines + j*size) > 0) {
+                                swap_lines(lines + i*size, lines + j*size, size);
                         }
                 }
         }
@@ -146,7 +158,7 @@ static void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)
         assert(ptr);
         assert(comp);
 
-        line_t *lines = (line_t *) ptr;
+        char *lines = (char *) ptr;
         size_t i = 0;
         size_t piv = 0;
 
@@ -154,37 +166,39 @@ static void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)
 		return;
 
 	for (i = 0; i < count; i++) {
-		if (comp(&lines[i], &lines[count - 1]) < 0)
-			swap_lines(lines + i, lines + piv++);
+		if (comp(lines + i*size, lines + (count - 1)*size) < 0) {
+			swap_lines(lines + i*size, lines + piv*size, size);
+                        piv++;
+                }
 	}
-	swap_lines(lines + piv, lines + count - 1);
+	swap_lines(lines + piv*size, lines + (count - 1)*size, size);
 
 	quick_sort_strings(lines, piv++, sizeof(line_t), comp);
-	quick_sort_strings(lines + piv, count - piv, sizeof(line_t), comp);
+	quick_sort_strings(lines + piv*size, count - piv, sizeof(line_t), comp);
 }
 
-void sort_strings(text_t *text, params_t params)
+void sort_strings(text_t *text, const params_t *params)
 {
         int (*comp)(const void *, const void *) = nullptr;
-        // len of declaration?
         void (*sort_func)(void *ptr, size_t count, size_t size,
                           int (*comp)(const void *, const void *)) = nullptr;
 
-        verbose_msg(params.verbose, "ignore_punc = %d, sort_type = %d\n", params.ignore_punc, params.sort_type);
+        verbose_msg(params->verbose, "ignore_punc = %d, sort_type = %d\n",
+                                     params->ignore_punc, params->sort_type);
 
-        if (!params.ignore_punc) {
-                if (params.reverse_comp)
+        if (!params->ignore_punc) {
+                if (params->reverse_comp)
                         comp = compare_lines_rev;
                 else
                         comp = compare_lines;
         } else {
-                if (params.reverse_comp)
+                if (params->reverse_comp)
                         comp = compare_lines_ignore_punc_rev;
                 else
                         comp = compare_lines_ignore_punc;
         }
 
-        switch (params.sort_type) {
+        switch (params->sort_type) {
                 case NO_SORT:
                         return;
                 case BUBBLE_SORT:

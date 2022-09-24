@@ -7,18 +7,17 @@
 #include "sort.h"
 #include "text.h"
 
-int read_file(text_t *text, file_t *file, bool verbose)
+int read_file(text_t *text, file_t *src, bool verbose)
 {
         assert(text);
-        assert(file);
+        assert(src);
 
-        struct stat stats {};
-        stat(file->src_filename, &stats);
-
-        text->buf_size = (size_t) stats.st_size;
+        text->buf_size = (size_t) src->file_stats.st_size;
 
         char *buffer = nullptr;
-        if ((buffer = (char *) mmap(NULL, text->buf_size, PROT_READ, MAP_PRIVATE, fileno(file->src_file_ptr), 0)) == MAP_FAILED) {
+        if ((buffer = (char *) mmap(NULL, text->buf_size, PROT_READ, MAP_PRIVATE,
+                                    fileno(src->file_ptr), 0)) == MAP_FAILED) {
+
                 fprintf(stderr, "Error: Couldn't allocate memory.\n");
                 return ERR_ALLOC;
         }
@@ -80,16 +79,14 @@ int create_lines_arr(text_t *text, bool verbose)
         return ERR_NO_ERR;
 }
 
-error_t write_strings(text_t text, file_t *file)
+error_t write_strings(text_t text, file_t *src, file_t *dst)
 {
         size_t count = 0;
-        struct stat stats {};
-        stat(file->src_filename, &stats);
 
-        setvbuf(file->dst_file_ptr, NULL, _IONBF, 0);
+        setvbuf(dst->file_ptr, NULL, _IONBF, 0);
 
         char *sorted_text_buffer = nullptr;
-        if((sorted_text_buffer = (char *) calloc((size_t) stats.st_size, sizeof(char))) == nullptr)
+        if((sorted_text_buffer = (char *) calloc((size_t) src->file_stats.st_size, sizeof(char))) == nullptr)
                 return ERR_ALLOC;
 
         for (size_t i = 0; i < text.num_of_lines; i++) {
@@ -106,7 +103,7 @@ error_t write_strings(text_t text, file_t *file)
                 count++;
         }
 
-        fwrite(sorted_text_buffer, sizeof(char), count, file->dst_file_ptr);
+        fwrite(sorted_text_buffer, sizeof(char), count, dst->file_ptr);
         free(sorted_text_buffer);
 
         return ERR_NO_ERR;

@@ -2,8 +2,7 @@
 #define ARGS_H
 
 #include <stdio.h>
-
-const int FILENAME_SIZE = 256;
+#include <sys/stat.h>
 
 enum sort_t {
         NO_SORT     = 0,
@@ -17,19 +16,18 @@ enum error_t {
         ERR_OPEN_FILE = 1,
         ERR_PARAMS    = 2,
         ERR_SORT_OPT  = 3,
-        ERR_ALLOC     = 4,
+        ERR_STATS     = 4,
+        ERR_ALLOC     = 5,
 };
 
 struct file_t {
-        // stat?
-        char  src_filename[FILENAME_SIZE] = {};
-        FILE *src_file_ptr = nullptr;
-        // large static array for name
-        char  dst_filename[FILENAME_SIZE] = {};
-        FILE *dst_file_ptr = nullptr;
+        FILE  *file_ptr;
+        struct stat file_stats = {};
 };
 
 struct params_t {
+        char *src_filename = nullptr;
+        char *dst_filename = nullptr;
         sort_t sort_type  = QUICK_SORT;
         bool help         = false;
         bool verbose      = false;
@@ -38,13 +36,13 @@ struct params_t {
 };
 
 // Processes command line arguments.
-error_t process_args(int argc, char *argv[], params_t *params, file_t *file);
+error_t process_args(int argc, char *argv[], params_t *params);
 // Prints error message.
 void print_err_msg(error_t err);
 // Prints info about program processes in verbose mode.
 int verbose_msg(bool verbose, const char *format, ...);
-// Prints help message.
-void print_help();
+// Opens file and gets info about it.
+error_t get_file(char *filename, file_t *file, const char *mode);
 
 #endif // ARGS_H
 

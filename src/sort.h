@@ -6,7 +6,7 @@
 #include "UI.h"
 
 // Sorts strings with given parameters.
-void sort_strings(text_t *text, params_t params);
+void sort_strings(text_t *text, const params_t *params);
 
 #endif // SORT_H
 

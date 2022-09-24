@@ -53,8 +53,10 @@ error_t get_file(char *filename, file_t *file, const char *mode)
                 return ERR_OPEN_FILE;
         }
 
-        if (stat(filename, &file->file_stats) != 0)
+        if (stat(filename, &file->file_stats) != 0) {
+                fprintf(stderr, "Error: Coudn't get stats of %s.\n", filename);
                 return ERR_STATS;
+        }
 
         return ERR_NO_ERR;
 }

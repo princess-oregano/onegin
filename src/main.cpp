@@ -19,8 +19,9 @@ int main(int argc, char *argv[])
         if (params.help)
                 return 0;
 
-        get_file(params.src_filename, &src, "r");
-        get_file(params.dst_filename, &dst, "w");
+        if ((get_file(params.src_filename, &src, "r") == ERR_STATS) ||
+            (get_file(params.dst_filename, &dst, "w") == ERR_STATS))
+                return ERR_STATS;
 
         if (read_file(&text, &src, params.verbose) == ERR_ALLOC)
                 return ERR_ALLOC;

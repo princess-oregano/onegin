@@ -1,21 +1,56 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "UI.h"
 #include "sort.h"
 
-static void swap(void *first, void *second, size_t size)
+static void swap(void *f_object, void *s_object, size_t size)
 {
-        assert(first);
-        assert(second);
+        assert(f_object);
+        assert(s_object);
 
-        char *ptr1 = (char *) first;
-        char *ptr2 = (char *) second;
+        char *f_ptr = (char *) f_object;
+        char *s_ptr = (char *) s_object;
 
-        for (size_t i = 0; i < size; i++) {
-                  char temp = *(ptr1 + i);
-                *(ptr1 + i) = *(ptr2 + i);
-                *(ptr2 + i) = temp;
+        while (size >= 8) { 
+                          uint64_t temp = *((uint64_t *)f_ptr);
+                *((uint64_t *)f_ptr) = *((uint64_t *)s_ptr);
+                *((uint64_t *)s_ptr) = temp;
+
+                f_ptr += 8;
+                s_ptr += 8;
+                size -= 8;
+        }
+
+        while (size >= 4) {
+                          uint32_t temp = *((uint32_t *)f_ptr);
+                *((uint32_t *)f_ptr) = *((uint32_t *)s_ptr);
+                *((uint32_t *)s_ptr) = temp;
+
+                f_ptr += 4;
+                s_ptr += 4;
+                size -= 4;
+        }
+
+        while (size >= 2) {
+                          uint16_t temp = *((uint16_t *)f_ptr);
+                *((uint16_t *)f_ptr) = *((uint16_t *)s_ptr);
+                *((uint16_t *)s_ptr) = temp;
+
+                f_ptr += 2;
+                s_ptr += 2;
+                size -= 2;
+        }
+
+        while (size == 1) {
+                          uint16_t temp = *((uint16_t *)f_ptr);
+                *((uint16_t *)f_ptr) = *((uint16_t *)s_ptr);
+                *((uint16_t *)s_ptr) = temp;
+
+                f_ptr += 1;
+                s_ptr += 1;
+                size -= 1;
         }
 }
 

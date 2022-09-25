@@ -21,22 +21,18 @@ $ git clone https://github.com/princess-oregano/onegin
 ```
 2. Open the subfolder with source files and build with Make:
 ```
-$ cd onegin/
+$ cd onegin/ ...
 $ make
 ```
-This way the `onegin` programs will automatically run ans sort 
+This way the `onegin` programs will automatically run and sort 
 the testing file `Romeo_and_Juliet.txt`with default 
 setting and verbose mode on.
 
-3. You can run the `onegin` program again from the folder, where it was built:
-```
-$ ./onegin
-```
-4. To remove all object files type this:
+3. To remove all object files:
 ```
 $ make clean
 ```
-5. To remove all files built by make type this:
+4. To remove all files built by make:
 ```
 $ make distclean
 ```
@@ -48,7 +44,7 @@ The minimum required input are filenames of input and output:
 $ ./onegin -i input.txt -o output.txt
 ```
 But you can specify next parameters as well:
-* `-s`, `--sort`: choose type of sorting from the list:
+* `-s <sort_type>`, `--sort <sort_type>`: choose type of sorting from the list:
     * *`no-sort`* no sorting is executed, the source file is copied to 
 destination file, but without empty lines or 
 whitespace in the beginning of the lines

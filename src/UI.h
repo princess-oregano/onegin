@@ -21,7 +21,7 @@ enum error_t {
 };
 
 struct file_t {
-        FILE  *file_ptr;
+        FILE  *file_ptr = nullptr;
         struct stat file_stats = {};
 };
 

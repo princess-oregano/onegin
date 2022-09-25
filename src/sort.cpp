@@ -4,18 +4,18 @@
 #include "UI.h"
 #include "sort.h"
 
-static void swap_lines(void *f_line, void *s_line, size_t size)
+static void swap(void *first, void *second, size_t size)
 {
-        assert(f_line);
-        assert(s_line);
+        assert(first);
+        assert(second);
 
-        char *line1 = (char *) f_line;
-        char *line2 = (char *) s_line;
+        char *ptr1 = (char *) first;
+        char *ptr2 = (char *) second;
 
         for (size_t i = 0; i < size; i++) {
-                char temp = *(line1 + i);
-             *(line1 + i) = *(line2 + i);
-             *(line2 + i) = temp;
+                  char temp = *(ptr1 + i);
+                *(ptr1 + i) = *(ptr2 + i);
+                *(ptr2 + i) = temp;
         }
 }
 
@@ -136,7 +136,7 @@ static int compare_lines_rev(const void *f_line, const void *s_line)
 }
 
 // Bubble sort for strigs.
-static void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
+static void bubble_sort(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
         assert(comp);
@@ -146,14 +146,14 @@ static void bubble_sort_strings(void *ptr, size_t count, size_t size, int (*comp
         for (size_t i = 0; i < count; i++) {
                 for (size_t j = i + 1; j < count; j++) {
                         if (comp(lines + i*size, lines + j*size) > 0) {
-                                swap_lines(lines + i*size, lines + j*size, size);
+                                swap(lines + i*size, lines + j*size, size);
                         }
                 }
         }
 }
 
 // Quicksort for strings.
-static void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
+static void quick_sort(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
         assert(comp);
@@ -167,14 +167,14 @@ static void quick_sort_strings(void *ptr, size_t count, size_t size, int (*comp)
 
 	for (i = 0; i < count; i++) {
 		if (comp(lines + i*size, lines + (count - 1)*size) < 0) {
-			swap_lines(lines + i*size, lines + piv*size, size);
+			swap(lines + i*size, lines + piv*size, size);
                         piv++;
                 }
 	}
-	swap_lines(lines + piv*size, lines + (count - 1)*size, size);
+	swap(lines + piv*size, lines + (count - 1)*size, size);
 
-	quick_sort_strings(lines, piv++, sizeof(line_t), comp);
-	quick_sort_strings(lines + piv*size, count - piv, sizeof(line_t), comp);
+	quick_sort(lines, piv++, sizeof(line_t), comp);
+	quick_sort(lines + piv*size, count - piv, sizeof(line_t), comp);
 }
 
 void sort_strings(text_t *text, const params_t *params)
@@ -202,10 +202,10 @@ void sort_strings(text_t *text, const params_t *params)
                 case NO_SORT:
                         return;
                 case BUBBLE_SORT:
-                        sort_func = bubble_sort_strings;
+                        sort_func = bubble_sort;
                         break;
                 case QUICK_SORT:
-                        sort_func = quick_sort_strings;
+                        sort_func = quick_sort;
                         break;
                 case Q_SORT:
                         sort_func = qsort;

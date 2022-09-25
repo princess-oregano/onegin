@@ -7,45 +7,46 @@
 // Prints help message.
 static void print_help()
 {
-        printf("     \\`*-.                      \n"
-               "      )  _`-.                    \n"
-               "     .  : `. .                   \n"
-               "     : _   '  \\                 \n"
-               "     ; *` _.   `*-._             \n"
-               "     `-.-'          `-.          \n"
-               "       ;       `       `.        \n"
-               "       :.       .        \\      \n"
-               "       . \\  .   :   .-'   .     \n"
-               "       '  `+.;  ;  '      :      \n"
-               "       :  '  |    ;       ;-.    \n"
-               "       ; '   : :`-:     _.`* ;   \n"
-               "    .*' /  .*' ; .*`- +'  `*'    \n"
-               "    `*-*   `*-*  `*-*'           \n"
-               "\n"
-               "********* COMMANDS *********\n"
-               "-i: enter input file(e.g. -i input.txt)\n"
-               "-o: enter output file\n"
-               "--help: print this help and close the program\n"
-               "-s: choose type of sorting\n"
-               "-p: sort text including all punctuation characters\n"
-               "-r: sort strings from the end of the string to the beginning\n"
-               "-v: verbose mode\n"
-               "\n"
-               "********* SORTING TYPES *********\n"
-               "no-sort: sorting is not executed\n"
-               "bubble: bubble sort\n"
-               "quicksort: quicksort\n"
-               "qsort: standart C qsort() function\n"
-               "\n"
-               "********* EXAMPLE *********\n"
-               "./onegin -i Romeo_and_Juliet.txt -o sorted_text.txt -r -s bubble\n"
-               "\n"
-               "Program will read text from Romeo_and_Juliet.txt, sort it\n"
-               "using bubble sort from the end of lines and print input to\n"
-               "sorted_text.txt file.\n");
+        printf(
+"     \\`*-.                      \n"
+"      )  _`-.                    \n"
+"     .  : `. .                   \n"
+"     : _   '  \\                 \n"
+"     ; *` _.   `*-._             \n"
+"     `-.-'          `-.          \n"
+"       ;       `       `.        \n"
+"       :.       .        \\      \n"
+"       . \\  .   :   .-'   .     \n"
+"       '  `+.;  ;  '      :      \n"
+"       :  '  |    ;       ;-.    \n"
+"       ; '   : :`-:     _.`* ;   \n"
+"    .*' /  .*' ; .*`- +'  `*'    \n"
+"    `*-*   `*-*  `*-*'           \n"
+"\n"
+"************ COMMANDS ************\n"
+"  -i, --input       enter input file(e.g. -i input.txt)\n"
+"  -o, --output      enter output file\n"
+"  -h, --help        print this help and close the program\n"
+"  -s, --sort        choose type of sorting\n"
+"  -p, --punc        sort text including all punctuation characters\n"
+"  -r, --reverse     sort strings from the ends of the strings\n"
+"  -v, --verbose     verbose mode\n"
+"\n"
+"********* SORTING TYPES *********\n"
+"  no-sort           sorting is not executed\n"
+"  bubble            bubble sort\n"
+"  quicksort         quicksort\n"
+"  qsort             standart C qsort() function\n"
+"\n"
+"********* EXAMPLE *********\n"
+"./onegin -i Romeo_and_Juliet.txt -o sorted_text.txt -r -s bubble\n"
+"\n"
+"Program will read text from Romeo_and_Juliet.txt, sort it\n"
+"using bubble sort from the end of lines and print input to\n"
+"sorted_text.txt file.\n");
 }
 
-error_t get_file(char *filename, file_t *file, const char *mode)
+int get_file(char *filename, file_t *file, const char *mode)
 {
         if ((file->file_ptr = fopen(filename, mode)) == nullptr) {
                 fprintf(stderr, "Error: Couldn't open %s.\n", filename);
@@ -75,24 +76,30 @@ int verbose_msg(bool verbose, const char *format, ...)
         return ret;
 }
 
-error_t process_args(int argc, char *argv[], params_t *params)
+int process_args(int argc, char *argv[], params_t *params)
 {
-        if (argc == 2 && strcmp(argv[1], "--help") == 0) {
+        if ((argc == 2) && ((strcmp(argv[1], "-h") == 0)
+                         || (strcmp(argv[1], "--help") == 0))) {
                 print_help();
                 params->help = true;
                 return ERR_NO_ERR;
         }
 
         for (int i = 1; i < argc; i++) {
-                if (strcmp(argv[i], "-i") == 0) {
+                if ((strcmp(argv[i], "-i") == 0) ||
+                    (strcmp(argv[i], "--input") == 0)) {
                         params->src_filename = argv[++i];
-                } else if (strcmp(argv[i], "-o") == 0) {
+                } else if ((strcmp(argv[i], "-o") == 0) ||
+                           (strcmp(argv[i], "--output") == 0)) {
                         params->dst_filename = argv[++i];
-                } else if (strcmp(argv[i], "-p") == 0) {
+                } else if ((strcmp(argv[i], "-p") == 0) ||
+                           (strcmp(argv[i], "--punc") == 0)) {
                         params->ignore_punc = false;
-                } else if (strcmp(argv[i], "-r") == 0) {
+                } else if ((strcmp(argv[i], "-r") == 0) ||
+                           (strcmp(argv[i], "--reverse") == 0)) {
                         params->reverse_comp = true;
-                } else if (strcmp(argv[i], "-s") == 0) {
+                } else if ((strcmp(argv[i], "-s") == 0) ||
+                           (strcmp(argv[i], "--sort") == 0)) {
                         i++;
                         if (strcmp(argv[i], "no-sort") == 0) {
                                 params->sort_type = NO_SORT;
@@ -109,7 +116,8 @@ error_t process_args(int argc, char *argv[], params_t *params)
                                 fprintf(stderr, "Error: Wrong sorting options.\n");
                                 return ERR_SORT_OPT;
                         }
-                } else if (strcmp(argv[i], "-v") == 0) {
+                } else if ((strcmp(argv[i], "-v") == 0) ||
+                           (strcmp(argv[i], "--verbose") == 0)) {
                         params->verbose = true;
                 } else {
                         fprintf(stderr, "Error: Wrong parameters.\n");

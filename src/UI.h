@@ -36,13 +36,13 @@ struct params_t {
 };
 
 // Processes command line arguments.
-error_t process_args(int argc, char *argv[], params_t *params);
+int process_args(int argc, char *argv[], params_t *params);
 // Prints error message.
 void print_err_msg(error_t err);
 // Prints info about program processes in verbose mode.
 int verbose_msg(bool verbose, const char *format, ...);
 // Opens file and gets info about it.
-error_t get_file(char *filename, file_t *file, const char *mode);
+int get_file(char *filename, file_t *file, const char *mode);
 
 #endif // ARGS_H
 

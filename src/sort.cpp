@@ -135,7 +135,7 @@ static int compare_lines_rev(const void *f_line, const void *s_line)
         }
 }
 
-// Bubble sort for strigs.
+// Bubble sort.
 static void bubble_sort(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);
@@ -152,7 +152,7 @@ static void bubble_sort(void *ptr, size_t count, size_t size, int (*comp)(const 
         }
 }
 
-// Quicksort for strings.
+// Quicksort.
 static void quick_sort(void *ptr, size_t count, size_t size, int (*comp)(const void *, const void *))
 {
         assert(ptr);

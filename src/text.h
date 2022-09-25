@@ -23,7 +23,7 @@ int create_lines_arr(text_t *text, bool verbose);
 // Frees allocated with malloc()/calloc()/realloc()/etc. space.
 void destroy_text(text_t *text);
 // Prints given text in stream.
-error_t write_strings(text_t text, file_t *src, file_t *dst);
+int write_strings(text_t text, file_t *src, file_t *dst);
 
 #endif // TEXT_H
 

@@ -49,7 +49,7 @@ int create_lines_arr(text_t *text, bool verbose)
         verbose_msg(verbose, "line_count = %d\n", line_count);
 
         if ((lines_array = (line_t *) calloc(line_count, sizeof(line_t))) == nullptr) {
-                fprintf(stderr, "Couldn't allocate memory for lines_array.\n");
+                fprintf(stderr, "Error: Couldn't allocate memory for lines_array.\n");
                 return ERR_ALLOC;
         }
 
@@ -79,14 +79,15 @@ int create_lines_arr(text_t *text, bool verbose)
         return ERR_NO_ERR;
 }
 
-error_t write_strings(text_t text, file_t *src, file_t *dst)
+int write_strings(text_t text, file_t *src, file_t *dst)
 {
         size_t count = 0;
 
         setvbuf(dst->file_ptr, NULL, _IONBF, 0);
 
         char *sorted_text_buffer = nullptr;
-        if((sorted_text_buffer = (char *) calloc((size_t) src->file_stats.st_size, sizeof(char))) == nullptr)
+        if((sorted_text_buffer = (char *) calloc((size_t) src->file_stats.st_size,
+                                                 sizeof(char))) == nullptr)
                 return ERR_ALLOC;
 
         for (size_t i = 0; i < text.num_of_lines; i++) {
